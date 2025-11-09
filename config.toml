@@ -1,0 +1,81 @@
+# TOML 格式配置文件，语法见 https://toml.io/en/
+# '#'开头的是注释
+
+[transcriber]
+
+# 音频设备序号，可运行 list-devices.bat 查看
+device = 1
+
+# Vosk AI模型文件路径
+model = "vosk-model-cn-0.22"
+
+[server]
+
+# 本地服务端口号
+port = 8080
+
+# 本机IP地址，不配置则自动检测
+# addr = "192.168.1.10"
+
+# 是否在初始化后自动打开网页
+launch_browser = true
+
+# 匹配规则列表
+[rules]
+
+
+
+# 一条规则，名称为 rule_1
+[rules.rule_1]
+
+# 关键字列表，匹配任意一个则该规则触发
+match = [
+	"我"
+]
+
+# 输出时间（毫秒）
+duration = 5000
+
+# 通道A设置：波形使用 default，强度为 100%
+# 波形会匹配下方的波形列表，缺省为 default
+# 强度是相对于App中设置的通道强度上限的百分比
+A = {wave = "default", strength = 100}
+
+# 通道B设置：波形使用 default，强度为 60%
+B = { strength = 60 }
+
+
+
+# 规则 rule_2
+[rules.rule_2]
+match = [
+	"呀",
+	"呢",
+	"的",
+]
+
+duration = 3000
+
+# 通道A设置：波形使用 test，强度为 100%
+A = {wave = "test", strength = 100}
+# 没有通道B
+
+
+
+# 波形列表
+[wave]
+
+# default 波形；波形是一个包含若干项频率+强度的列表，详见
+# https://github.com/DG-LAB-OPENSOURCE/DG-LAB-OPENSOURCE/blob/main/socket/README.md#%E6%B3%A2%E5%BD%A2%E6%93%8D%E4%BD%9C
+default = [
+	"0A0A0A0A64646464",
+]
+
+# test 波形
+test = [
+	"0A0A0A0A64646464",
+	"2020202064646464",
+	"2C2C2C2C64646464",
+	"3838383864646464",
+	"4444444464646464",
+]

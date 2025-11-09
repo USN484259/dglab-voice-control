@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title id="title"></title>
+</head>
+<body>
+	<div id="qrcode"></div>
+	<div>
+		<span id="status">inactive</span>
+		<br>
+		<span id="channel_a"></span>
+		<br>
+		<span id="channel_b"></span>
+		<br>
+	</div>
+	<textarea id="text_log" readonly></textarea>
+	<style>
+span {
+	font-size: 120%;
+	font-weight: bold;
+}
+#text_log {
+	width: 100%;
+	height: 80vh;
+	min-height: 400px;
+	resize: vertical;
+}
+	</style>
+	<script src="qrcode.min.js"></script>
+	<script>
+
+const channel_pattern = /strength-(\d+)[+](\d+)[+](\d+)[+](\d+)/;
+let stat_timer = null;
+
+function set_status(stat) {
+	let elem = document.getElementById("status");
+	elem.textContent = (stat ? "active" : "closed");
+	if (stat_timer) {
+		clearTimeout(stat_timer);
+		stat_timer = null;
+	}
+	if (stat) {
+		stat_timer = setTimeout(() => {elem.textContent = "timeout"}, 30 * 1000);
+	}
+}
+
+function set_channel_data(data) {
+	let match = data.match(channel_pattern);
+	if (match) {
+		let a = `A:\t${match[1]}/${match[3]}`;
+		let b = `B:\t${match[2]}/${match[4]}`;
+		document.getElementById("channel_a").textContent = a;
+		document.getElementById("channel_b").textContent = b;
+	}
+}
+
+function append_log_text(data) {
+	if (data) {
+		let textarea = document.getElementById("text_log");
+		let bottom_distance = textarea.scrollTop + textarea.clientHeight - textarea.scrollHeight;
+
+		textarea.value += (data + '\n');
+
+		if (Math.abs(bottom_distance) < 1)
+			 textarea.scrollTop = textarea.scrollHeight;
+	}
+}
+
+addEventListener("DOMContentLoaded", () => {
+	let client_id = null;
+	let target_id = null;
+	let qrcode = new QRCode(document.getElementById("qrcode"));
+
+	let ws = new WebSocket("/ws");
+	ws.onmessage = function(ev) {
+		let msg = null;
+		try {
+			msg = JSON.parse(ev.data);
+		} catch (e) {
+			console.log(ev.data, e);
+			return;
+		}
+		switch (msg.type) {
+		case "bind":
+			if (!msg.targetId) {
+				client_id = msg.clientId;
+				console.log("bind client " + client_id);
+				let url = "https://www.dungeon-lab.com/app-download.php#DGLAB-SOCKET#ws://" + window.location.hostname + ':' + window.location.port + '/' + client_id;
+				qrcode.clear();
+				qrcode.makeCode(url);
+			} else if (msg.clientId == client_id) {
+				target_id = msg.targetId;
+				console.log("bind device " + target_id);
+				document.getElementById("qrcode").remove();
+				document.getElementById("text_log").value = "";
+			}
+			break;
+		case "break":
+			ws.close();
+			set_status(false);
+			break;
+		case "msg":
+			set_status(true);
+			set_channel_data(msg.message);
+			break;
+		case "heartbeat":
+			set_status(true);
+			append_log_text(msg.message);
+			break;
+		}
+	}
+
+	ws.onclose = function (ev) {
+		console.log("Socket closed.");
+	};
+	ws.onerror = function (ev) {
+		console.log("Socket error:", ev);
+	};
+
+});
+
+	</script>
+</body>
+</html>
