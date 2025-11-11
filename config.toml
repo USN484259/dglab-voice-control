@@ -30,7 +30,7 @@ launch_browser = true
 
 # 关键字列表，匹配任意一个则该规则触发
 match = [
-	"我"
+    "我"
 ]
 
 # 输出时间（毫秒）
@@ -49,15 +49,15 @@ B = { strength = 60 }
 # 规则 rule_2
 [rules.rule_2]
 match = [
-	"呀",
-	"呢",
-	"的",
+    "呀",
+    "呢",
+    "的",
 ]
 
 duration = 3000
 
 # 通道A设置：波形使用 test，强度为 100%
-A = {wave = "test", strength = 100}
+A = {wave = "wave_2", strength = 100}
 # 没有通道B
 
 
@@ -68,14 +68,12 @@ A = {wave = "test", strength = 100}
 # default 波形；波形是一个包含若干项频率+强度的列表，详见
 # https://github.com/DG-LAB-OPENSOURCE/DG-LAB-OPENSOURCE/blob/main/socket/README.md#%E6%B3%A2%E5%BD%A2%E6%93%8D%E4%BD%9C
 default = [
-	"0A0A0A0A64646464",
+    "0A0A0A0A64646464",
 ]
 
-# test 波形
-test = [
-	"0A0A0A0A64646464",
-	"2020202064646464",
-	"2C2C2C2C64646464",
-	"3838383864646464",
-	"4444444464646464",
-]
+# 三个示例波形，取自官方示例网站
+# https://github.com/DG-LAB-OPENSOURCE/DG-LAB-OPENSOURCE/blob/main/socket/FrontEnd(Html%2BCss%2BJs)/wsConnection.js
+
+wave_1 = ["0A0A0A0A00000000","0A0A0A0A0A0A0A0A","0A0A0A0A14141414","0A0A0A0A1E1E1E1E","0A0A0A0A28282828","0A0A0A0A32323232","0A0A0A0A3C3C3C3C","0A0A0A0A46464646","0A0A0A0A50505050","0A0A0A0A5A5A5A5A","0A0A0A0A64646464"]
+wave_2 = ["0A0A0A0A00000000","0D0D0D0D0F0F0F0F","101010101E1E1E1E","1313131332323232","1616161641414141","1A1A1A1A50505050","1D1D1D1D64646464","202020205A5A5A5A","2323232350505050","262626264B4B4B4B","2A2A2A2A41414141"]
+wave_3 = ["4A4A4A4A64646464","4545454564646464","4040404064646464","3B3B3B3B64646464","3636363664646464","3232323264646464","2D2D2D2D64646464","2828282864646464","2323232364646464","1E1E1E1E64646464","1A1A1A1A64646464"]

@@ -21,7 +21,7 @@ from webserver import DglabWebServer
 
 LOG_FORMAT = "%(asctime)s\t%(levelname)s\t%(name)s\t%(message)s"
 
-logger = logging.getLogger("main")
+logger = logging.getLogger("dglab-voice-control")
 
 
 def main(args):

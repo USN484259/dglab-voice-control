@@ -12,7 +12,6 @@ logger = logging.getLogger("controller")
 
 strength_feedback_pattern = re.compile(r"strength-(\d+)[+](\d+)[+](\d+)[+](\d+)")
 builtin_wave = ["0A0A0A0A64646464"]
-wave_interval = 5000
 
 
 def merge_pulse(current, rec, ts):
